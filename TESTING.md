@@ -1,4 +1,4 @@
-# Verification record — VK Likes Cleaner v0.2.6 Preview
+# Проверки — VK Likes Cleaner v0.2.6
 
 Original user Library ZIP: `VK_Likes_Cleaner_v0.2.6.zip`, 44,488 bytes.
 SHA-256: `69f3661265dc96a04e2ce2562e0edfc4ff1444d1f8185f6e39877855e6f00433`.
@@ -10,4 +10,4 @@ Offline Node.js verification of unchanged project scripts:
 - `tests/test-dashboard.js`: 18 assertions passed.
 - **Total: 1,516 assertions passed.**
 
-Manual VK testing of v0.2.6 not verified. Earlier v0.2.1 was confirmed with 3 likes removed after refresh. CAPTCHA protection relies on visible interface detection and can miss variants. User confirmation is required before creating a Stable Release.
+**Проверка на реальном ВК:** пользователь сообщил, что v0.2.6 работает. Ранее v0.2.1 была подтверждена тремя снятыми лайками после обновления страницы. Отдельная проверка всех разновидностей CAPTCHA не задокументирована; распознавание видимых проверок может пропускать некоторые варианты. GitHub Release пока не создан, публикация исходников и полноценный релиз — разные этапы.

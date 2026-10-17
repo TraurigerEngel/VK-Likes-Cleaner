@@ -1,35 +1,58 @@
 # VK Likes Cleaner
 
-**v0.2.6 — Preview / test build (NOT a Stable Release).**
+**VK Likes Cleaner v0.2.6** — расширение для браузеров на Chromium, которое помогает находить и снимать **собственные реакции во ВКонтакте**.
 
-Chromium Manifest V3 extension for locally managing and removing **your own** reactions on VK (`vk.com`, `vk.ru`). The extension is unaffiliated with VK.
+**Статус:** пользователь подтвердил, что v0.2.6 работает на реальном ВК. Исходники опубликованы; отдельный GitHub Release пока не создан. Расширение не является официальным продуктом ВКонтакте.
 
-## Current state
+## Возможности
 
-- **v0.2.1**: small batches (1 or 3 reactions) confirmed by the user on real VK; three likes did not reappear after a page refresh.
-- **v0.2.6 Preview**: 1,516 offline assertions passed. Real-world testing of this exact build, especially the unlimited mode and CAPTCHA handling, **has not been confirmed**. Do not label it Stable until verified.
+- Работа с выбранным разделом реакций ВК (`vk.com` и `vk.ru`).
+- Просмотр и поиск реакций без удаления.
+- Ограниченные порции: **1, 3, 10 или 25** попыток; настраиваемые интервалы.
+- Режим **«∞ · До конца выбранного раздела»** с автоматической прокруткой, небольшими внутренними порциями и кнопками **«Пауза»**, **«Продолжить»**, **«Остановить»**.
+- Локальные счётчики прогресса и статистика по категориям.
+- Остановка при обнаружении типовых проверок **«Я не робот» / CAPTCHA**. Проверку проходит только сам пользователь.
 
-## Features in v0.2.6 Preview
+> [!IMPORTANT]
+> Режим «До конца» работает с **доступной в интерфейсе лентой выбранного раздела**. Он не гарантирует удаления всех реакций за всю историю аккаунта. Статус **«Вероятно снято»** — локальная оценка, а не подтверждение сервера ВК.
 
-- Select a VK reactions category; preview or scan without removing anything.
-- Limited batches of 1, 3, 10 or 25 attempts, with adjustable delays.
-- Experimental `∞ · До конца выбранного раздела` mode with autoscroll, internal batches, pause/resume/stop, and an end-of-available-feed condition. **This does not guarantee clearing every historical VK reaction.**
-- Explicitly stop when common VK CAPTCHA / `Я не робот` challenges are detected. **Does not solve or bypass CAPTCHAs, and must not resume automatically.** Some challenges may be missed. Stop when you see one.
-- Show local progress and category counters. A status of `Вероятно снято` is **not** server-verified proof.
+## Установка
 
-## Installing the Preview
+1. Откройте [репозиторий VK Likes Cleaner](https://github.com/TraurigerEngel/VK-Likes-Cleaner) и выберите **Code → Download ZIP**.
+2. Распакуйте ZIP в постоянную папку. В ней должен находиться `manifest.json`.
+3. Откройте страницу расширений браузера: `chrome://extensions/` (Chrome и другие Chromium-браузеры) либо `browser://extensions/` (Яндекс Браузер, если этот адрес поддерживается в вашей версии).
+4. Включите **режим разработчика** и нажмите **«Загрузить распакованное расширение»**.
+5. Выберите папку с `manifest.json`, затем обновите вкладку ВКонтакте.
+6. Нажмите значок **VK Likes Cleaner**, выберите раздел реакций и сначала проверьте небольшую порцию.
 
-1. Download the source ZIP or extension ZIP, unpack it into its own folder.
-2. In a Chromium-based browser, open `chrome://extensions/` (or your browser's extension-management page), enable developer mode and load the folder containing `manifest.json` as an unpacked extension.
-3. Disable older copies while testing, open `vk.ru` / `vk.com`, and refresh the VK tab.
-4. Start with **1–3 reactions**, check the result manually on VK after refreshing, and stop on CAPTCHA or unexpected behavior.
-5. Only test extended operation on your own account after validating short batches. There is no one-click undo.
+При обновлении расширения сохраняйте постоянную папку установки. Не запускайте две версии одновременно.
 
-**Important permission:** `debugger` has a broader browser capability than VK alone; the code limits its actions to VK tabs, but the granted browser permission is broader. Review the source and extension permissions before use.
+## Как пользоваться
 
-## Test suite (Node.js)
+1. Откройте **свой** аккаунт ВКонтакте и нужный раздел реакций.
+2. В панели расширения выберите категорию и режим обработки.
+3. Для первичной проверки используйте **1–3 попытки** и убедитесь после обновления страницы ВК, что реакции действительно снялись.
+4. Для длительной обработки можно включить **«∞ · До конца выбранного раздела»**. Не закрывайте панель и не взаимодействуйте с обрабатываемой вкладкой во время кликов.
+5. При необходимости используйте паузу или остановку. Закрытие панели останавливает непрерывную сессию; автоматического продолжения после перезапуска нет.
 
-```bash
+**CAPTCHA:** если ВК показывает «Я не робот», ограничение скорости или неожиданное сообщение — **остановите обработку** и разберитесь с проверкой вручную. Расширение не решает и не обходит CAPTCHA. Выявление всех вариантов проверки не гарантируется.
+
+**Внимание:** снятие реакции изменяет состояние вашего аккаунта, и общей кнопки отмены нет.
+
+## Безопасность и приватность
+
+- Для управления мышью используется разрешение Chromium `debugger`. **Это широкое разрешение браузера**, хотя код ограничивает свои действия вкладками ВК. Перед установкой ознакомьтесь с [исходниками](https://github.com/TraurigerEngel/VK-Likes-Cleaner).
+- Разрешения сайтов в `manifest.json` ограничены `vk.com` и `vk.ru`.
+- Расширение не требует вводить пароль ВК или API-токен. Прогресс и счётчики могут храниться локально в профиле браузера.
+- Не публикуйте личные JSON-отчёты, cookies, данные сессий и диагностические журналы.
+
+Подробнее: [Безопасность и приватность](SECURITY_PRIVACY_RU.md).
+
+## Проверка исходников
+
+Нужен **Node.js**; внешние npm-зависимости не требуются. Выполните команды из папки проекта:
+
+```powershell
 node --check background.js
 node --check content.js
 node --check dashboard.js
@@ -38,12 +61,10 @@ node tests/test-content.js
 node tests/test-dashboard.js
 ```
 
-There are no external JavaScript dependencies. Chromium is required to test the browser integration. All HTML/CSS/JS in the extension is local; no extra domains beyond `vk.com` and `vk.ru` are requested.
+Зафиксированный результат офлайн-проверок v0.2.6: **1 516 проверок пройдены** (1259 + 239 + 18). Офлайн-тесты не заменяют проверку реального интерфейса ВКонтакте. См. [TESTING.md](TESTING.md).
 
-## Privacy, limits and rights
+## Лицензия
 
-No VK credentials, authentication tokens, personal reaction reports, cookies, user profiles or live session data are distributed with these source files. The extension stores its own progress data locally in the browser profile. The project is not affiliated with or endorsed by VK, and usage may be subject to VK's platform terms and rate limits.
+Авторский исходный код распространяется по [лицензии MIT](LICENSE). Названия «VK» и «ВКонтакте» — товарные знаки соответствующих правообладателей. Проект не связан с администрацией ВКонтакте и не одобрен ею.
 
-Author-owned code: [MIT License](LICENSE). The "VK" and "ВКонтакте" names are trademarks of their respective owner; this licence does not grant rights to those trademarks.
-
-See [SECURITY_PRIVACY_RU.md](SECURITY_PRIVACY_RU.md) and the original detailed [README.txt](README.txt).
+Подробное описание работы режимов: [README.txt](README.txt).
