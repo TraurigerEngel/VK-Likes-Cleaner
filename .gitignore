@@ -1,0 +1,21 @@
+# Private browser data and local reports
+*.log
+*.har
+*.sqlite
+*.sqlite3
+*.db
+*.pem
+*.key
+.env
+.env.*
+chrome-profile/
+chromium-profile/
+user-data/
+private/
+reports/
+VK-Likes-Cleaner-Report-*.json
+*.bundle
+node_modules/
+dist/
+.DS_Store
+Thumbs.db

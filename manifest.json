@@ -1,0 +1,34 @@
+{
+  "manifest_version": 3,
+  "name": "VK Likes Cleaner",
+  "version": "0.2.6",
+  "description": "Очистка собственных реакций ВК с остановкой при проверке «Я не робот»; CAPTCHA вручную.",
+  "permissions": [
+    "tabs",
+    "storage",
+    "scripting",
+    "debugger"
+  ],
+  "host_permissions": [
+    "https://vk.com/*",
+    "https://vk.ru/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_title": "Открыть VK Likes Cleaner"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://vk.com/*",
+        "https://vk.ru/*"
+      ],
+      "js": [
+        "content.js"
+      ],
+      "run_at": "document_idle"
+    }
+  ]
+}

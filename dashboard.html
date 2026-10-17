@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <title>VK Likes Cleaner</title>
+  <link rel="stylesheet" href="dashboard.css">
+  <script src="dashboard.js" defer></script>
+</head>
+<body>
+  <main class="layout">
+    <header class="header">
+      <div class="identity"><div class="logo" aria-hidden="true">♡</div><div><div class="eyebrow">ЛОКАЛЬНЫЙ ИНСТРУМЕНТ · v0.2.6</div><h1>VK Likes Cleaner</h1><p>Очистка истории реакций ВКонтакте</p></div></div>
+      <span class="pill" id="status">Проверка подключения…</span>
+    </header>
+
+    <section class="notice">
+      <span class="noticeIcon">!</span>
+      <div><strong>Контролируемая очистка: порции или режим «До конца»</strong><p>Точное нажатие мышью уже сработало на реальном ВК. Но ВК иногда не даёт явного признака завершения: такие реакции считаются «вероятно снятыми», а не подтверждёнными. Начните с 3 реакций, затем проверьте 10 перед использованием 25. Турборежим: 2 секунды между лайками и досрочная проверка примерно через 2,1 секунды, но только при устойчивом изменении и закрытом меню. Если результат неясен — проверка до 4,5 секунды и остановка. Режимы 3/5 секунд сохраняют полную проверку до 4,5 секунды. В режиме «До конца» автопрокрутка обязательна, обработка идёт внутренними порциями по 10, без лимита на общее число лайков. Если новые реакции не появляются, встречается ошибка или вы нажимаете «Пауза/Стоп», процесс прерывается. Панель должна оставаться открытой; закрытие панели останавливает управление. При появлении проверки «Я не робот» обработка будет прекращена: пройдите её вручную; автоматический обход и автоматическое возобновление отсутствуют. Если проверки повторяются, откажитесь от автоматизации. Распознавание проверки зависит от интерфейса ВК и не гарантировано. Полнота истории не гарантируется. Для ввода используется разрешение Chromium «Отладка» с широкими возможностями.</p></div>
+    </section>
+
+    <div class="stats" aria-live="polite">
+      <article class="stat"><span>Подтверждено снятий</span><strong id="removed">0</strong><small>Реакций</small></article>
+      <article class="stat"><span>Вероятно снято</span><strong id="suspected">0</strong><small>Проверить вручную</small></article><article class="stat"><span>В загруженной ленте</span><strong id="visible">—</strong><small>Активных кнопок</small></article>
+      <article class="stat"><span>Не подтверждено</span><strong id="failed">0</strong><small>Остановки по ошибке</small></article>
+      <article class="stat"><span>Автоматических попыток</span><strong id="attemptCount">0</strong><small>В текущей вкладке ВК</small></article>
+    </div>
+
+    <div class="columns">
+      <section class="panel controls">
+        <div class="panelHeading"><div><h2>Управление</h2><p>Выберите раздел своих реакций.</p></div><span class="dot" id="dot"></span></div>
+        <div class="categoryPicker"><label for="category">Категория реакций</label><select id="category"><option value="all">Все реакции</option><option value="wall">Записи</option><option value="wall_reply">Комментарии</option><option value="clips">Клипы</option><option value="video">Видео</option></select></div><div class="actionsTop"><button id="open" class="btn primary">Открыть выбранный раздел ↗</button><button id="scan" class="btn secondary">Сканировать без удаления</button></div><div class="selectedRoute" id="selectedRoute">vk.ru/feed?section=likes</div>
+        <div class="settings singleSetting">
+          <label>Режим обработки
+            <select id="maxBatch"><option value="1">1 · проверка</option><option value="3" selected>3 · проверенная порция</option><option value="10">10 · следующая проверка</option><option value="25">25 · экспериментально</option><option value="0">∞ · До конца выбранного раздела</option></select>
+          </label>
+        </div>
+        <div class="settings singleSetting">
+          <label for="delayMs">Пауза между лайками
+            <select id="delayMs"><option value="2000" selected>2 секунды · турбо (быстрая проверка)</option><option value="3000">3 секунды · стандарт (полная проверка)</option><option value="5000">5 секунд · бережно (полная проверка)</option></select>
+          </label>
+        </div>
+        <label class="accept"><input id="autoScroll" type="checkbox"><span>Автопрокрутка при отсутствии найденных реакций. В обычных порциях — не больше 60 шагов; в режиме «До конца» — обязательна, до прекращения загрузки новых реакций.</span></label>
+        <label class="accept"><input id="consent" type="checkbox"><span>Я разрешаю очистку выбранного раздела. В режиме «До конца» количество не ограничено заранее; процесс остановится по моей команде, при ошибке или при исчерпании загружаемой ленты.</span></label>
+        <div class="scanDetails" id="progressStatus">Сохранённый прогресс по разделам загружается…</div>
+        <div class="actions"><button id="start" class="btn primary" disabled>Начать обработку</button><button id="pause" class="btn secondary" disabled>Пауза</button><button id="resume" class="btn secondary" disabled>Продолжить</button><button id="stop" class="btn danger" disabled>Остановить</button></div>
+        <div class="scanDetails" id="continuousStatus" aria-live="polite">Режим «До конца» не запущен.</div>
+        <div class="scanDetails permissionNote" id="permissionNote">ВНИМАНИЕ: разрешение «Отладка» обязательно для этой тестовой сборки и запрашивается при её установке. Это широкое разрешение Chromium. Для отказа удалите расширение. Наш код использует отладчик только во вкладке выбранного раздела ВК и отключает его после каждого нажатия.</div><div class="hint" id="hint">Подключение к странице ВКонтакте…</div><div class="scanDetails" id="attemptStatus">Автоматический тест ещё не выполнялся.</div><div class="scanDetails" id="scanDetails">Проверка страницы пока не выполнена.</div>
+        <div class="diagnosticBox learnBox"><div class="diagnosticHeading"><strong>Наблюдение за ручным снятием (v2)</strong><span>Без автоматических нажатий</span></div>
+        <p>Начните наблюдение, перейдите во вкладку ВК и один раз вручную нажмите на уже поставленное красное сердце. Вернитесь сюда и завершите наблюдение. Запись ограничена 90 секундами, содержимое публикаций не сохраняется.</p>
+        <div class="diagnosticButtons"><button id="observeStart" class="btn secondary">Начать наблюдение</button><button id="observeStop" class="btn secondary" disabled>Завершить</button><button id="observeSave" class="btn secondary" disabled>Сохранить наблюдение JSON</button></div>
+        <div class="scanDetails" id="observeStatus">Наблюдение не запускалось.</div></div>
+        <div class="diagnosticBox"><div class="diagnosticHeading"><strong>Диагностика кнопок ВК</strong><span>Только структура страницы, без личных данных</span></div>
+        <p>Диагностика структуры кнопок ничего не нажимает и не прокручивает. После тестовой порции сохраните отчёт журнала, если результат вызывает сомнения. Диагностика и наблюдение не производят автоматических действий.</p>
+        <div class="diagnosticButtons"><button id="diagnose" class="btn secondary">Собрать диагностику</button><button id="copyDiagnostic" class="btn secondary" disabled>Копировать отчёт</button><button id="saveDiagnostic" class="btn secondary" disabled>Сохранить JSON</button></div>
+        <div class="scanDetails" id="diagnosticStatus">Диагностика ещё не собрана.</div></div>
+        <div class="auxActions"><button id="reload" class="textButton">Перезагрузить вкладку ВК</button><button id="reset" class="textButton">Сбросить счётчики вкладки</button></div>
+      </section>
+
+      <section class="panel logpanel">
+        <div class="panelHeading"><div><h2>Журнал</h2><p>Действия и причины остановки</p></div><button id="export" class="textButton">Сохранить отчёт ↧</button></div>
+        <div class="log" id="log" aria-live="polite"><div class="empty">После подключения здесь появится журнал.</div></div>
+        <div class="logFooter">Пароли, куки, токены и тексты публикаций не собираются. Журнал сохраняется только локально.</div>
+      </section>
+    </div>
+    <footer>VK Likes Cleaner · локальное расширение с открытым исходным кодом · не связано с VK</footer>
+  </main>
+</body>
+</html>
