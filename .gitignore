@@ -19,3 +19,6 @@ node_modules/
 dist/
 .DS_Store
 Thumbs.db
+# Local diagnostic exports: never publish browser-derived reports
+VK-Likes-Cleaner-Diagnostics*.json
+VK-Likes-Cleaner-Manual-Trace-*.json
